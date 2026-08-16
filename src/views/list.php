@@ -43,6 +43,7 @@
                    placeholder="Search keywords…">
             <button type="submit">Search</button>
         </form>
+        <button type="button" id="refresh-btn">Refresh positions</button>
     </div>
 
     <?php if (!$rows): ?>
@@ -60,14 +61,14 @@
                 </thead>
                 <tbody>
                     <?php foreach ($rows as $row): ?>
-                        <tr>
+                        <tr data-id="<?= e($row['id']) ?>">
                             <td data-label="Keyword">
                                 <a href="/keyword.php?id=<?= e($row['id']) ?>"><?= e($row['keyword']) ?></a>
                             </td>
-                            <td data-label="Position">
+                            <td data-label="Position" class="td-position">
                                 <?= $row['current'] === null ? '&mdash;' : e((string) $row['current']) ?>
                             </td>
-                            <td data-label="7-day trend"><?= trend_badge($row['trend']) ?></td>
+                            <td data-label="7-day trend" class="td-trend"><?= trend_badge($row['trend']) ?></td>
                             <td data-label="Actions" class="actions-col">
                                 <a href="/?edit=<?= e($row['id']) ?>" class="btn-link">Edit</a>
                                 <form method="post" class="inline-form"

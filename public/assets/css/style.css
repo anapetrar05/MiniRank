@@ -119,6 +119,11 @@ button,
 button:hover,
 .btn-link:hover { background: var(--primary-dark); }
 
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .btn-danger {
     background: transparent;
     border-color: var(--bad);
@@ -180,6 +185,39 @@ button:hover,
 
 .actions-col { white-space: nowrap; }
 .actions-col .inline-form { display: inline; }
+
+/* Detail page */
+.meta {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.crumb-sep {
+    color: var(--muted);
+    margin: 0 6px;
+}
+
+.chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 120px;
+    margin-bottom: 16px;
+    padding: 8px;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.chart-bar {
+    flex: 1;
+    min-width: 3px;
+    background: var(--primary);
+    border-radius: 2px 2px 0 0;
+    opacity: 0.85;
+}
 
 /* Badges */
 .badge {

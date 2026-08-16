@@ -18,4 +18,7 @@
     <main class="container">
         <nav class="breadcrumb">
             <a href="/">Keywords</a>
+            <?php if (!empty($breadcrumb)): ?>
+                <span class="crumb-sep">/</span><span><?= e($breadcrumb) ?></span>
+            <?php endif; ?>
         </nav>
