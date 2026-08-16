@@ -63,19 +63,17 @@ $search = trim((string) ($_GET['q'] ?? ''));
 $keywords = $search === '' ? $repo->all() : $repo->search($search);
 
 $today = date('Y-m-d');
-$sevenDaysAgo = date('Y-m-d', strtotime('-7 days'));
 
 $rows = [];
 foreach ($keywords as $kw) {
     $id = (int) $kw['id'];
-    $current = $repo->positionOn($id, $today);
-    $previous = $repo->positionOn($id, $sevenDaysAgo);
+    $avg = $service->windowAverages($repo, $id, $today);
 
     $rows[] = [
         'id' => $id,
         'keyword' => $kw['keyword'],
-        'current' => $current,
-        'trend' => $service->trend($current, $previous),
+        'current' => $repo->positionOn($id, $today),
+        'trend' => $service->trend($avg['recent'], $avg['previous']),
     ];
 }
 

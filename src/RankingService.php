@@ -8,18 +8,67 @@ declare(strict_types=1);
 final class RankingService
 {
     /**
-     * Compare a current position against the position ~7 days earlier.
-     * Position 1 is best, so a smaller number means an improvement.
+     * Mean of the given positions, or null when there are none.
+     */
+    public function average(array $positions): ?float
+    {
+        $count = count($positions);
+
+        return $count === 0 ? null : array_sum($positions) / $count;
+    }
+
+    /**
+     * 7-day trend from window averages.
+     *
+     * Recent = average of the last 7 days, previous = average of the 7 days
+     * before that. Comparing windows instead of two single days smooths out
+     * daily noise. Position 1 is best, so a smaller recent average is an
+     * improvement. When either window has no data the trend is "stable".
      *
      * @return string one of "improved", "declined", "stable"
      */
-    public function trend(?int $current, ?int $previous): string
+    public function trend(?float $recentAvg, ?float $previousAvg): string
     {
-        if ($current === null || $previous === null || $current === $previous) {
+        if ($recentAvg === null || $previousAvg === null) {
             return 'stable';
         }
 
-        return $current < $previous ? 'improved' : 'declined';
+        $delta = $recentAvg - $previousAvg;
+
+        if (abs($delta) < 0.001) {
+            return 'stable';
+        }
+
+        return $delta < 0 ? 'improved' : 'declined';
+    }
+
+    /**
+     * Compute the two 7-day window averages for a keyword:
+     *   recent  = days [today-6 .. today]
+     *   previous = days [today-13 .. today-7]
+     *
+     * @return array{recent: ?float, previous: ?float}
+     */
+    public function windowAverages(KeywordRepository $repo, int $keywordId, string $today): array
+    {
+        $today = new DateTimeImmutable($today);
+
+        $recent = $repo->positionsBetween(
+            $keywordId,
+            $today->modify('-6 days')->format('Y-m-d'),
+            $today->format('Y-m-d')
+        );
+
+        $previous = $repo->positionsBetween(
+            $keywordId,
+            $today->modify('-13 days')->format('Y-m-d'),
+            $today->modify('-7 days')->format('Y-m-d')
+        );
+
+        return [
+            'recent' => $this->average($recent),
+            'previous' => $this->average($previous),
+        ];
     }
 
     /**
@@ -30,7 +79,6 @@ final class RankingService
     public function refreshToday(KeywordRepository $repo): array
     {
         $today = date('Y-m-d');
-        $sevenDaysAgo = date('Y-m-d', strtotime('-7 days'));
         $updated = [];
 
         foreach ($repo->all() as $kw) {
@@ -39,11 +87,12 @@ final class RankingService
 
             $repo->upsertPosition($id, $today, $position);
 
+            $avg = $this->windowAverages($repo, $id, $today);
             $updated[] = [
                 'id' => $id,
                 'keyword' => $kw['keyword'],
                 'position' => $position,
-                'trend' => $this->trend($position, $repo->positionOn($id, $sevenDaysAgo)),
+                'trend' => $this->trend($avg['recent'], $avg['previous']),
             ];
         }
 
