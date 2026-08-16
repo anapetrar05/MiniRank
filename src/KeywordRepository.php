@@ -108,18 +108,6 @@ final class KeywordRepository
         return $row === false ? null : (int) $row['position'];
     }
 
-    /** Positions within an inclusive date range (used for trend windows). */
-    public function positionsBetween(int $keywordId, string $from, string $to): array
-    {
-        $stmt = $this->db->prepare(
-            'SELECT position FROM positions
-             WHERE keyword_id = :keyword_id AND date BETWEEN :from AND :to'
-        );
-        $stmt->execute(['keyword_id' => $keywordId, 'from' => $from, 'to' => $to]);
-
-        return array_column($stmt->fetchAll(), 'position');
-    }
-
     /** Full position history for a keyword, oldest first. */
     public function history(int $keywordId): array
     {
