@@ -37,7 +37,7 @@ body {
 
 .site-title {
     margin: 0;
-    font-size: 1.4rem;
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
 }
 
 .site-title a {
@@ -92,6 +92,7 @@ body {
 input[type="text"],
 input[type="search"] {
     flex: 1 1 220px;
+    min-width: 0;
     padding: 8px 10px;
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -105,6 +106,7 @@ input:focus {
 
 button,
 .btn-link {
+    min-height: 40px;
     padding: 8px 14px;
     border: 1px solid transparent;
     border-radius: var(--radius);
@@ -113,7 +115,9 @@ button,
     font-size: 0.9rem;
     cursor: pointer;
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 button:hover,
@@ -182,6 +186,10 @@ button:disabled {
 
 .keyword-table a { color: var(--primary); text-decoration: none; }
 .keyword-table a:hover { text-decoration: underline; }
+
+.keyword-table td {
+    overflow-wrap: anywhere;
+}
 
 .actions-col { white-space: nowrap; }
 .actions-col .inline-form { display: inline; }
@@ -259,4 +267,24 @@ button:disabled {
         text-transform: uppercase;
         color: var(--muted);
     }
+}
+
+/* Small phones: stack controls full-width so nothing overflows */
+@media (max-width: 480px) {
+    .container { padding: 0 12px; }
+
+    .list-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-form { flex: none; width: 100%; }
+    .search-form input { flex: 1; }
+
+    .inline-form > input[type="text"],
+    .inline-form > input[type="search"] { flex-basis: 100%; }
+
+    .inline-form > button { flex: 1; }
+
+    .chart { gap: 1px; }
 }
