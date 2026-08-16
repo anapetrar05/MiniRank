@@ -1,0 +1,224 @@
+:root {
+    --bg: #f4f6f8;
+    --surface: #ffffff;
+    --border: #dde3e8;
+    --text: #1f2a36;
+    --muted: #6b7785;
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --good: #16a34a;
+    --bad: #dc2626;
+    --neutral: #6b7280;
+    --radius: 8px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+/* Header / footer */
+.site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 0;
+}
+
+.site-title {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.site-title a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.site-tagline {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.breadcrumb {
+    margin: 20px 0 12px;
+    font-size: 0.9rem;
+}
+
+.breadcrumb a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.site-footer {
+    margin-top: 40px;
+    padding: 16px 0 32px;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+/* Cards */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.card h2 {
+    margin: 0 0 12px;
+    font-size: 1.1rem;
+}
+
+/* Forms */
+.inline-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+input[type="text"],
+input[type="search"] {
+    flex: 1 1 220px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+}
+
+input:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
+
+button,
+.btn-link {
+    padding: 8px 14px;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    background: var(--primary);
+    color: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+button:hover,
+.btn-link:hover { background: var(--primary-dark); }
+
+.btn-danger {
+    background: transparent;
+    border-color: var(--bad);
+    color: var(--bad);
+}
+
+.btn-danger:hover { background: var(--bad); color: #fff; }
+
+.btn-link { background: transparent; border-color: var(--border); color: var(--primary); }
+
+/* Alerts */
+.alert {
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+
+.alert p { margin: 0; }
+
+.alert-error { background: #fef2f2; border: 1px solid #fecaca; color: var(--bad); }
+.alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: var(--good); }
+
+/* List toolbar */
+.list-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.search-form { display: flex; gap: 8px; flex: 1 1 280px; }
+.search-form input { flex: 1; }
+
+.empty { color: var(--muted); }
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+
+.keyword-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.keyword-table th,
+.keyword-table td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.keyword-table th { color: var(--muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; }
+
+.keyword-table a { color: var(--primary); text-decoration: none; }
+.keyword-table a:hover { text-decoration: underline; }
+
+.actions-col { white-space: nowrap; }
+.actions-col .inline-form { display: inline; }
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-good { background: #dcfce7; color: var(--good); }
+.badge-bad { background: #fee2e2; color: var(--bad); }
+.badge-neutral { background: #e5e7eb; color: var(--neutral); }
+
+/* Responsive: collapse table to stacked cards on small screens */
+@media (max-width: 640px) {
+    .keyword-table thead { display: none; }
+
+    .keyword-table tr {
+        display: block;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        margin-bottom: 10px;
+        padding: 4px 0;
+    }
+
+    .keyword-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: none;
+        gap: 12px;
+    }
+
+    .keyword-table td::before {
+        content: attr(data-label);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--muted);
+    }
+}
