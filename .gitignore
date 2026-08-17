@@ -2,6 +2,11 @@
 data/*
 !data/.gitkeep
 
+# PHPUnit
+phpunit.phar
+.phpunit.result.cache
+.phpunit.cache/
+
 # OS / editor cruft
 .DS_Store
 Thumbs.db

@@ -68,6 +68,22 @@ Notes:
 |---|---|
 | `php scripts/seed.php` | Create DB + schema + demo data (idempotent) |
 | `php -S localhost:8000 -t public` | One-command start of the app |
+| `php phpunit.phar` | Run the PHPUnit test suite |
+
+## Testing
+
+Core logic (seeding and trend calculation) is covered by PHPUnit tests in
+`tests/`. They run against an in-memory SQLite database, so they never touch
+your `data/` file.
+
+Get the runner (once) and run:
+
+```
+php -r "copy('https://phar.phpunit.de/phpunit.phar', 'phpunit.phar');"
+php phpunit.phar
+```
+
+The `.phar` is gitignored; `phpunit.xml` and the `tests/` suite are committed.
 
 ## Project structure
 
