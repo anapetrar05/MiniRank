@@ -17,7 +17,10 @@
 </section>
 
 <section class="card">
-    <h2>Position history</h2>
+    <div class="card-head">
+        <h2>Position history</h2>
+        <a class="btn-link" href="/export.php?id=<?= e($keyword['id']) ?>">Download CSV</a>
+    </div>
 
     <?php if (!$history): ?>
         <p class="empty">No position data yet.</p>

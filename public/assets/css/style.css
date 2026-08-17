@@ -83,6 +83,16 @@ body {
     font-size: 1.1rem;
 }
 
+.card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.card-head h2 { margin: 0; }
+
 /* Forms */
 .inline-form {
     display: flex;
