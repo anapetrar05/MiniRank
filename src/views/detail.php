@@ -22,14 +22,7 @@
     <?php if (!$history): ?>
         <p class="empty">No position data yet.</p>
     <?php else: ?>
-        <div class="chart" aria-hidden="true">
-            <?php foreach ($history as $row): ?>
-                <?php $height = 101 - (int) $row['position']; ?>
-                <div class="chart-bar"
-                     style="height: <?= e((string) $height) ?>%"
-                     title="<?= e($row['date']) ?>: <?= e((string) $row['position']) ?>"></div>
-            <?php endforeach; ?>
-        </div>
+        <?= position_line_chart($history) ?>
 
         <div class="table-wrap">
             <table class="keyword-table">

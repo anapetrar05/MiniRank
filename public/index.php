@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// --- Read (list, with optional text search) ---
+// --- Read (list, with optional text search + filters) ---
 $search = trim((string) ($_GET['q'] ?? ''));
 $keywords = $search === '' ? $repo->all() : $repo->search($search);
 
@@ -78,6 +78,45 @@ foreach ($keywords as $kw) {
         'trend' => $service->trend($current, $previous),
     ];
 }
+
+// --- Apply trend / position filters ---
+$trend = isset($_GET['trend']) && $_GET['trend'] !== '' ? (string) $_GET['trend'] : null;
+
+// Custom min/max position filter (both optional, validated 1..100).
+$posMin = null;
+$posMax = null;
+foreach (['pos_min', 'pos_max'] as $key) {
+    $raw = $_GET[$key] ?? '';
+    if (is_string($raw) && $raw !== '' && ctype_digit($raw)) {
+        $value = (int) $raw;
+        if ($value >= 1 && $value <= 100) {
+            if ($key === 'pos_min') {
+                $posMin = $value;
+            } else {
+                $posMax = $value;
+            }
+        }
+    }
+}
+
+$rows = array_values(array_filter($rows, function (array $row) use ($trend, $posMin, $posMax): bool {
+    if ($trend !== null && $row['trend'] !== $trend) {
+        return false;
+    }
+
+    if ($posMin !== null || $posMax !== null) {
+        if ($row['current'] === null) {
+            return false;
+        }
+        $min = $posMin ?? 1;
+        $max = $posMax ?? 100;
+        if ($row['current'] < $min || $row['current'] > $max) {
+            return false;
+        }
+    }
+
+    return true;
+}));
 
 require __DIR__ . '/../src/views/header.php';
 require __DIR__ . '/../src/views/list.php';

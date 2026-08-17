@@ -41,9 +41,57 @@
         <form method="get" class="search-form">
             <input type="search" name="q" value="<?= e($search) ?>"
                    placeholder="Search keywords…">
+            <?php if ($trend !== null): ?><input type="hidden" name="trend" value="<?= e($trend) ?>"><?php endif; ?>
+            <?php if ($posMin !== null): ?><input type="hidden" name="pos_min" value="<?= e((string) $posMin) ?>"><?php endif; ?>
+            <?php if ($posMax !== null): ?><input type="hidden" name="pos_max" value="<?= e((string) $posMax) ?>"><?php endif; ?>
             <button type="submit">Search</button>
         </form>
         <button type="button" id="refresh-btn">Refresh positions</button>
+    </div>
+
+    <?php
+    $query = [];
+    if ($search !== '') {
+        $query['q'] = $search;
+    }
+    if ($trend !== null) {
+        $query['trend'] = $trend;
+    }
+    if ($posMin !== null) {
+        $query['pos_min'] = $posMin;
+    }
+    if ($posMax !== null) {
+        $query['pos_max'] = $posMax;
+    }
+    ?>
+    <div class="filters">
+        <div class="filter-group">
+            <span class="filter-label">Trend:</span>
+            <a class="chip<?= $trend === null ? ' chip-active' : '' ?>"
+               href="<?= e(chip_url($query, null)) ?>">All</a>
+            <?php foreach (['improved' => 'Improved', 'declined' => 'Declined', 'stable' => 'Stable'] as $key => $label): ?>
+                <a class="chip<?= $trend === $key ? ' chip-active' : '' ?>"
+                   href="<?= e(chip_url($query, $key)) ?>"><?= e($label) ?></a>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="filter-group">
+            <span class="filter-label">Position:</span>
+            <form method="get" class="pos-filter">
+                <input type="hidden" name="q" value="<?= e($search) ?>">
+                <?php if ($trend !== null): ?><input type="hidden" name="trend" value="<?= e($trend) ?>"><?php endif; ?>
+                <input type="number" name="pos_min" min="1" max="100" placeholder="min"
+                       value="<?= $posMin === null ? '' : e((string) $posMin) ?>">
+                <span class="pos-sep">&ndash;</span>
+                <input type="number" name="pos_max" min="1" max="100" placeholder="max"
+                       value="<?= $posMax === null ? '' : e((string) $posMax) ?>">
+                <button type="submit">Filter</button>
+                <?php if ($posMin !== null || $posMax !== null): ?>
+                    <?php $clear = $query; unset($clear['pos_min'], $clear['pos_max']); ?>
+                    <a class="chip" href="<?= e('/?' . http_build_query($clear)) ?>">Clear</a>
+                <?php endif; ?>
+            </form>
+        </div>
     </div>
 
     <?php if (!$rows): ?>
