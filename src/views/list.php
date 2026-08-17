@@ -4,6 +4,7 @@
 <section class="card">
     <h2>Edit keyword</h2>
     <form method="post" class="inline-form">
+        <?= Csrf::field() ?>
         <input type="hidden" name="action" value="update">
         <input type="hidden" name="id" value="<?= e($editKeyword['id']) ?>">
         <input type="text" name="keyword" value="<?= e($editKeyword['keyword']) ?>"
@@ -16,6 +17,7 @@
 <section class="card">
     <h2>Add keyword</h2>
     <form method="post" class="inline-form">
+        <?= Csrf::field() ?>
         <input type="hidden" name="action" value="add">
         <input type="text" name="keyword" required maxlength="100"
                placeholder="e.g. seo guide">
@@ -121,6 +123,7 @@
                                 <a href="/?edit=<?= e($row['id']) ?>" class="btn-link">Edit</a>
                                 <form method="post" class="inline-form"
                                       onsubmit="return confirm('Delete this keyword?');">
+                                    <?= Csrf::field() ?>
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="id" value="<?= e($row['id']) ?>">
                                     <button type="submit" class="btn-danger">Delete</button>

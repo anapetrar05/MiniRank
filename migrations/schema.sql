@@ -1,6 +1,13 @@
 -- MiniRank schema
 -- Executed by scripts/seed.php (idempotent: safe to run repeatedly).
 
+CREATE TABLE IF NOT EXISTS users (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    email         TEXT    NOT NULL UNIQUE,
+    password_hash TEXT    NOT NULL,
+    created_at    TEXT    NOT NULL DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS keywords (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
     keyword    TEXT    NOT NULL UNIQUE,

@@ -35,4 +35,9 @@ trait CreatesInMemoryRepo
 
         return $pdo;
     }
+
+    private function applySchema(PDO $pdo): void
+    {
+        (new Seeder($pdo, new KeywordRepository($pdo)))->applySchema();
+    }
 }

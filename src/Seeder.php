@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/KeywordRepository.php';
+require_once __DIR__ . '/UserRepository.php';
 
 /**
  * Creates the schema and seeds demo ranking data.
@@ -70,5 +71,26 @@ final class Seeder
         }
 
         return ['created' => count($demoKeywords), 'positions' => $positions];
+    }
+
+    /**
+     * Create a demo account so a fresh install is usable right away.
+     * Returns ['created' => 1] when the user was created, ['created' => 0] when
+     * the email already exists.
+     */
+    public function ensureDemoUser(): array
+    {
+        $this->applySchema();
+
+        $users = new UserRepository($this->pdo);
+        $email = 'demo@example.com';
+
+        if ($users->findByEmail($email) !== null) {
+            return ['created' => 0];
+        }
+
+        $users->create($email, password_hash('demo1234', PASSWORD_DEFAULT));
+
+        return ['created' => 1];
     }
 }

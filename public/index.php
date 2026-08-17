@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../src/helpers.php';
-require_once __DIR__ . '/../src/KeywordRepository.php';
-require_once __DIR__ . '/../src/RankingService.php';
+require_once __DIR__ . '/../src/bootstrap.php';
+
+Auth::requireLogin();
 
 $repo = new KeywordRepository(Database::connection());
 $service = new RankingService();
@@ -16,6 +16,7 @@ $editKeyword = $editId > 0 ? $repo->find($editId) : null;
 
 // --- Mutations (add / update / delete) ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    Csrf::requireValidPost();
     $action = $_POST['action'] ?? 'add';
 
     if ($action === 'add' || $action === 'update') {

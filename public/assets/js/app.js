@@ -2,12 +2,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const refreshBtn = document.getElementById('refresh-btn');
     if (!refreshBtn) return;
 
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
     refreshBtn.addEventListener('click', async () => {
         refreshBtn.disabled = true;
         refreshBtn.textContent = 'Refreshing…';
 
         try {
-            const res = await fetch('/api/refresh.php', { method: 'POST' });
+            const res = await fetch('/api/refresh.php', {
+                method: 'POST',
+                headers: { 'X-CSRF-Token': csrfToken },
+            });
             if (!res.ok) throw new Error('Server responded with ' + res.status);
 
             const data = await res.json();

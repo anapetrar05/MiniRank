@@ -32,7 +32,19 @@ body {
 .site-header {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
-    padding: 16px 0;
+    padding: 12px 0;
+}
+
+.header-row {
+    display: flex;
+    align-items: center;
+}
+
+.header-side,
+.user-nav { flex: 1; }
+
+.site-brand {
+    flex: 1;
     text-align: center;
 }
 
@@ -50,6 +62,29 @@ body {
     margin: 0;
     color: var(--muted);
     font-size: 0.85rem;
+}
+
+.user-nav {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-email {
+    font-size: 0.85rem;
+    color: var(--muted);
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.logout-form { display: inline-flex; }
+.logout-form button {
+    min-height: 32px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
 }
 
 .breadcrumb {
@@ -161,6 +196,43 @@ button:disabled {
 
 .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: var(--bad); }
 .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: var(--good); }
+
+/* Auth pages */
+.auth-card {
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.auth-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.auth-form input {
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+}
+
+.auth-form button { align-self: flex-start; }
+
+.auth-switch {
+    margin: 16px 0 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.auth-switch a { color: var(--primary); }
 
 /* List toolbar */
 .list-toolbar {
@@ -348,6 +420,22 @@ button:disabled {
 
 /* Responsive: collapse table to stacked cards on small screens */
 @media (max-width: 640px) {
+    .header-row { flex-wrap: wrap; }
+
+    .site-brand {
+        order: 1;
+        flex-basis: 100%;
+    }
+
+    .user-nav {
+        order: 2;
+        flex-basis: 100%;
+        justify-content: center;
+        padding-top: 8px;
+    }
+
+    .header-side { display: none; }
+
     .keyword-table thead { display: none; }
 
     .keyword-table tr {
@@ -390,4 +478,7 @@ button:disabled {
     .inline-form > input[type="search"] { flex-basis: 100%; }
 
     .inline-form > button { flex: 1; }
+
+    .user-nav { gap: 4px; }
+    .user-email { max-width: 120px; }
 }

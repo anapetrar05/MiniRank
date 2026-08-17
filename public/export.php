@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../src/helpers.php';
-require_once __DIR__ . '/../src/KeywordRepository.php';
+require_once __DIR__ . '/../src/bootstrap.php';
+
+Auth::requireLogin();
 
 $repo = new KeywordRepository(Database::connection());
 
