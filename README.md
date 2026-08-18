@@ -17,6 +17,8 @@ search APIs are used.
   and text search
 - Detail page per keyword: full position history table + chart
 - Responsive UI (table collapses to cards on small screens)
+- Docker setup: `docker compose up --build -d` runs app + SQLite database in
+  one container (see "Docker" below)
 
 ## Stack
 
@@ -66,13 +68,39 @@ Notes:
 - The SQLite database lives in `data/` and is gitignored — nothing sensitive is
   ever committed.
 
+## Docker
+
+The project ships a `Dockerfile` + `docker-compose.yml` that run the whole app
+(Apache + PHP 8.2 + SQLite) in a single container. SQLite is embedded, so the
+"database" is the SQLite file kept on a persistent Docker volume
+(`minirank-data`) — no separate DB container is needed.
+
+Start it (first build may take a couple of minutes):
+
+```
+docker compose up --build -d
+```
+
+Open http://localhost:8080 and log in with `demo@example.com` / `demo1234`.
+
+On first start the container seeds the database automatically (demo keywords +
+demo account); later starts are no-ops. The volume keeps your data across
+restarts. Port 8080 is used so it does not clash with the local
+`php -S localhost:8000` dev server.
+
 ## Commands
 
 | Command | Purpose |
 |---|---|
 | `php scripts/seed.php` | Create DB + schema + demo data (idempotent) |
-| `php -S localhost:8000 -t public` | One-command start of the app |
+| `php -S localhost:8000 -t public` | One-command start of the app (no Docker) |
 | `php phpunit.phar` | Run the PHPUnit test suite |
+| `docker compose up --build -d` | Build + start the app in Docker |
+| `docker compose ps` | Show container status |
+| `docker compose logs -f app` | Follow the app logs |
+| `docker compose exec app php phpunit.phar` | Run the test suite inside the container |
+| `docker compose down` | Stop the container (database volume is kept) |
+| `docker compose down -v` | Stop and delete the volume — full reset, DB is re-seeded next start |
 
 ## Testing
 
@@ -85,6 +113,12 @@ Get the runner (once) and run:
 ```
 php -r "copy('https://phar.phpunit.de/phpunit.phar', 'phpunit.phar');"
 php phpunit.phar
+```
+
+With Docker the runner is already inside the image:
+
+```
+docker compose exec app php phpunit.phar
 ```
 
 The `.phar` is gitignored; `phpunit.xml` and the `tests/` suite are committed.
@@ -106,6 +140,9 @@ src/               app code (outside web root)
   views/           header, footer, list, detail, login, register
 scripts/seed.php   seed command
 migrations/schema.sql     table definitions (keywords, positions, users)
+Dockerfile         container build (Apache + PHP + SQLite)
+docker-compose.yml        one-command container start (port 8080)
+docker/apache.conf        Apache vhost pointing at public/
 data/              SQLite database (gitignored)
 ```
 

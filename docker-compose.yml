@@ -1,0 +1,12 @@
+services:
+  app:
+    build: .
+    container_name: minirank
+    ports:
+      - "8080:80"
+    volumes:
+      # Persist the SQLite database across container restarts.
+      - minirank-data:/var/www/html/data
+
+volumes:
+  minirank-data:

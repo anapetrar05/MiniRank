@@ -1,0 +1,16 @@
+# Local SQLite database must NOT be baked into the image.
+# The docker-compose volume is mounted at /var/www/html/data instead.
+data/*
+!data/.gitkeep
+
+# Git / editor / OS cruft
+.git
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# PHPUnit phar is downloaded fresh during the image build
+phpunit.phar
+.phpunit.result.cache
+.phpunit.cache/
