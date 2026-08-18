@@ -3,7 +3,7 @@ services:
     build: .
     container_name: minirank
     ports:
-      - "8080:80"
+      - "8000:80"
     volumes:
       # Persist the SQLite database across container restarts.
       - minirank-data:/var/www/html/data

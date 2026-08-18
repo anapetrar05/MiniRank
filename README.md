@@ -81,12 +81,12 @@ Start it (first build may take a couple of minutes):
 docker compose up --build -d
 ```
 
-Open http://localhost:8080 and log in with `demo@example.com` / `demo1234`.
+Open http://localhost:8000 and log in with `demo@example.com` / `demo1234`.
 
 On first start the container seeds the database automatically (demo keywords +
 demo account); later starts are no-ops. The volume keeps your data across
-restarts. Port 8080 is used so it does not clash with the local
-`php -S localhost:8000` dev server.
+restarts. Docker uses the same port 8000 as the plain `php -S` dev server, so
+run only one of the two at a time.
 
 ## Commands
 
@@ -141,7 +141,7 @@ src/               app code (outside web root)
 scripts/seed.php   seed command
 migrations/schema.sql     table definitions (keywords, positions, users)
 Dockerfile         container build (Apache + PHP + SQLite)
-docker-compose.yml        one-command container start (port 8080)
+docker-compose.yml        one-command container start (port 8000)
 docker/apache.conf        Apache vhost pointing at public/
 data/              SQLite database (gitignored)
 ```
