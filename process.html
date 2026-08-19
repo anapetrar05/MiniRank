@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniRank — Development Process</title>
+    <style>
+        :root {
+            --primary: #16a34a;
+            --primary-dark: #15803d;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --surface: #ffffff;
+            --bg: #f9fafb;
+            --radius: 10px;
+            --bad: #b91c1c;
+            --good: #16a34a;
+            --neutral: #6b7280;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                         "Helvetica Neue", Arial, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header.site-header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 24px 0 20px;
+            text-align: center;
+        }
+
+        header.site-header h1 {
+            margin: 0;
+            font-size: clamp(1.6rem, 5vw, 2.1rem);
+            color: var(--primary);
+        }
+
+        header.site-header p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        main { padding: 28px 0 60px; }
+
+        section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 22px;
+            margin-bottom: 22px;
+        }
+
+        section > h2 {
+            margin: 0 0 4px;
+            font-size: 1.25rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        section > .section-note {
+            margin: 0 0 14px;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        h3 {
+            margin: 18px 0 6px;
+            font-size: 1.05rem;
+            color: var(--text);
+        }
+
+        ul, ol { padding-left: 22px; margin: 8px 0; }
+
+        li { margin-bottom: 6px; }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.9em;
+            background: #f3f4f6;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1px 5px;
+        }
+
+        pre {
+            background: #111827;
+            color: #e5e7eb;
+            border-radius: 8px;
+            padding: 12px 14px;
+            overflow-x: auto;
+            font-size: 0.88rem;
+        }
+
+        pre code { background: none; border: none; padding: 0; color: inherit; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 0.92rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th { background: #f3f4f6; }
+
+        .card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin: 14px 0;
+        }
+
+        .card.fixed { border-left: 4px solid var(--good); }
+        .card.failed { border-left: 4px solid var(--bad); }
+
+        .card .prompt {
+            font-style: italic;
+            color: var(--muted);
+            margin: 0 0 10px;
+            padding-left: 10px;
+            border-left: 2px solid var(--border);
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 2px 8px;
+            border-radius: 999px;
+            vertical-align: middle;
+        }
+
+        .badge.good { background: #dcfce7; color: var(--good); }
+        .badge.bad { background: #fee2e2; color: var(--bad); }
+        .badge.neutral { background: #e5e7eb; color: var(--neutral); }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+            padding-bottom: 30px;
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 0 12px; }
+            section { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <h1>MiniRank — Development Process</h1>
+        <p>How the project was planned, built and refined with opencode</p>
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- ============ PLAN ============ -->
+    <section>
+        <h2>1. Plan</h2>
+        <p class="section-note">The plan we followed and the key decisions we locked in.</p>
+
+        <p>
+            The project is a keyword position tracker (<strong>MiniRank</strong>): a small
+            full-stack app in which the user tracks daily <em>simulated</em> search-engine
+            positions for a set of keywords. It was built one requirement at a time, and
+            each requirement was implemented, tested and committed before moving to the
+            next one.
+        </p>
+
+        <h3>The requirements, in order</h3>
+        <table>
+            <thead>
+                <tr><th>#</th><th>Requirement</th><th>What it delivered</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>M1</td><td>CRUD for keywords</td><td>Add, edit and delete tracked keywords with a simple UI</td></tr>
+                <tr><td>M2</td><td>Seed script</td><td>6 demo keywords with ~30 days of simulated positions (1–100)</td></tr>
+                <tr><td>M3</td><td>Refresh positions</td><td>One-click refresh that generates today's ranks and updates the list via AJAX, no page reload</td></tr>
+                <tr><td>M4</td><td>List + trend + search</td><td>Current position, 7-day trend (Improved / Declined / Stable) and text search</td></tr>
+                <tr><td>M5</td><td>Detail page</td><td>Full position history per keyword, later extended with an SVG chart and CSV export</td></tr>
+                <tr><td>M6</td><td>Security audit</td><td>Reviewed every query and output: parameterized SQL + escaped HTML everywhere</td></tr>
+                <tr><td>M7</td><td>README</td><td>Setup, commands, project structure and security documentation</td></tr>
+                <tr><td>M8</td><td>Responsive UI</td><td>Table collapses to cards on small screens; theme and layout polish</td></tr>
+                <tr><td>+</td><td>User accounts &amp; CSRF</td><td>Register / login / logout with hashed passwords, sessions and CSRF protection</td></tr>
+                <tr><td>+</td><td>Docker</td><td>One-command start of the app and database in a container</td></tr>
+                <tr><td>+</td><td>Automated tests</td><td>PHPUnit suite (16 tests) running against an in-memory SQLite database</td></tr>
+            </tbody>
+        </table>
+
+        <h3>How we worked</h3>
+        <ul>
+            <li>
+                <strong>Requirement by requirement.</strong> Each step was small enough to
+                be implemented and committed on its own, so progress was always verifiable.
+            </li>
+            <li>
+                <strong>Testing before moving on.</strong> Every step was checked manually in
+                the browser (and with the automated suite once it existed) before the next
+                requirement started.
+            </li>
+            <li>
+                <strong>The user writes the commits</strong> — one commit per implemented
+                requirement, so the history mirrors the plan.
+            </li>
+        </ul>
+
+        <h3>Key decisions</h3>
+        <ul>
+            <li>
+                <strong>Locked stack:</strong> PHP 8+, SQLite, PDO, HTML/CSS/vanilla JS —
+                no frameworks, libraries or build tools.
+            </li>
+            <li>
+                <strong>Simulated ranking data.</strong> Never use an external search-engine
+                API; positions are generated server-side.
+            </li>
+            <li>
+                <strong>Clean separation:</strong> database access (repositories), business
+                logic (<code>RankingService</code>) and presentation (views) kept apart.
+            </li>
+            <li>
+                <strong>Security first:</strong> PDO prepared statements everywhere, HTML
+                escaping on every output, bcrypt password hashes, per-session CSRF tokens
+                on every form and the AJAX request.
+            </li>
+            <li>
+                <strong>Shared dataset, login only:</strong> accounts gate access to the app,
+                but keywords are not split per user.
+            </li>
+            <li>
+                <strong>Keep logic as simple as the requirement asks:</strong> the trend ended
+                up as a simple "today vs 7 days ago" comparison (see the fixes below).
+            </li>
+            <li>
+                <strong>No chart library:</strong> the detail-page chart is hand-rolled SVG
+                to avoid adding a dependency.
+            </li>
+            <li>
+                <strong>One Docker container:</strong> SQLite is embedded, so the "database"
+                is a file on a persistent volume — no separate database server container.
+            </li>
+            <li>
+                <strong>Tests never touch real data:</strong> PHPUnit runs against an
+                in-memory SQLite database.
+            </li>
+        </ul>
+    </section>
+
+    <!-- ============ PROMPTS & FIXES ============ -->
+    <section>
+        <h2>2. Prompts &amp; Fixes</h2>
+        <p class="section-note">Three real prompts from the sessions — including one that failed — and the mistakes that had to be corrected.</p>
+
+        <div class="card fixed">
+            <h3>Prompt 1 — Trend calculation <span class="badge neutral">worked, then simplified</span></h3>
+            <p class="prompt">
+                "Add a list view with current position, 7-day trend and search" (requirement M4)
+            </p>
+            <p>
+                The first implementation calculated the trend with a <strong>7-day window
+                average</strong> (average of the last 7 days vs. the previous 7 days). It
+                worked, but it was more complex than the requirement asked for and made the
+                logic harder to reason about and test.
+            </p>
+            <p>
+                <strong>Fix:</strong> reverted to a simple single-point comparison — current
+                position vs. the position from 7 days ago. Lower is improved, higher is
+                declined, equal or missing is stable. The change was verified with temporary
+                checks and the diff shrank by roughly 70 lines.
+            </p>
+        </div>
+
+        <div class="card failed">
+            <h3>Prompt 2 — Docker setup <span class="badge bad">failed at first</span></h3>
+            <p class="prompt">
+                "I need for this project to have a docker setup that starts app and database and I need to know how to test it"
+            </p>
+            <p>
+                The container build and the app worked, but two mistakes needed correcting:
+            </p>
+            <ul>
+                <li>
+                    <strong>Two different localhost URLs.</strong> The local dev server ran on
+                    port <code>8000</code>; I exposed Docker on port <code>8080</code> to avoid
+                    a clash. That left the project with two URLs
+                    (<code>localhost:8000</code> vs <code>localhost:8080</code>), which was
+                    confusing. After the user asked to unify on one port, the mapping was
+                    changed to <code>8000:80</code> so Docker serves on
+                    <code>http://localhost:8000</code> — the same URL the app always used.
+                </li>
+                <li>
+                    <strong>Wrong PHPUnit version in the image.</strong> The build downloaded
+                    the latest <code>phpunit.phar</code> (v13), which requires PHP ≥ 8.4, but
+                    the container runs PHP 8.2 — running the tests failed immediately with
+                    <em>"This version of PHPUnit requires PHP &gt;= 8.4.1"</em>. Fixed by
+                    pinning <code>phpunit-11.5.phar</code>, the newest line compatible with
+                    PHP 8.2.
+                </li>
+            </ul>
+            <p>
+                Minor fixes along the way: a global <code>ServerName</code> to silence an
+                Apache warning, and a <code>.dockerignore</code> so the local development
+                database is never baked into the image.
+            </p>
+        </div>
+
+        <div class="card fixed">
+            <h3>Prompt 3 — User accounts &amp; CSRF protection <span class="badge good">worked</span></h3>
+            <p class="prompt">
+                "Add user accounts (register, login, logout) with hashed passwords and sessions, plus CSRF protection"
+            </p>
+            <p>
+                We agreed on a <strong>shared dataset, login only</strong>: accounts gate access
+                to the app, but keywords are not scoped per user. The implementation included
+                a <code>users</code> table, bcrypt password hashing, hardened sessions
+                (HTTP-only cookies, <code>SameSite=Lax</code>, session id rotation on login),
+                and a per-session CSRF token verified on every mutating request — including a
+                header check on the AJAX refresh endpoint.
+            </p>
+            <p>
+                The seed script creates a demo account
+                (<code>demo@example.com</code> / <code>demo1234</code>) so a fresh install is
+                usable immediately. Verified with a full HTTP flow (login, logout, rejected
+                bad tokens, protected pages) and the automated suite grew to 16 tests.
+            </p>
+        </div>
+    </section>
+
+    <!-- ============ RETROSPECTIVE ============ -->
+    <section>
+        <h2>3. Retrospective</h2>
+        <p class="section-note">What I would do differently, and what the whole process cost.</p>
+
+        <p>
+            The overall process worked well: building requirement by requirement meant every
+            step was small, testable and easy to commit. The plan was solid from the start.
+        </p>
+
+        <p>
+            What I would do <strong>differently</strong>: from the very beginning, after
+            <em>every</em> step I would ask explicitly <strong>"how do I test this new
+            implementation?"</strong>. Often I finished a feature and then had to figure out
+            on my own how to verify it before committing — that wasted time. If I had asked
+            for a short "how to test" explanation at the end of every step, I could have
+            checked each change immediately and committed it right away.
+        </p>
+
+        <p>
+            The port mix-up (two localhost URLs after Docker was added) taught me to keep a
+            single port from the beginning and confirm it whenever something new is
+            introduced. The PHPUnit version failure taught me to pin tool versions instead of
+            grabbing "latest".
+        </p>
+
+        <h3>How I prepared and what I learned about the tools</h3>
+        <p>
+            I used <strong>ChatGPT</strong> in two ways. First, to understand the requirements
+            and the candidate brief — that helped me figure out what I actually needed to ask
+            opencode and how to plan my prompts, so each request to the agent was focused on
+            one requirement at a time. Second, during the setup of opencode, git and my PHP
+            IDE: whenever I ran into an error or didn't know what to do next, I asked ChatGPT
+            for help to get unstuck and finish the setup.
+        </p>
+        <p>
+            The <strong>commit history is not perfect</strong>: it took me a while to understand
+            how to write and add commits, and some of them I lost along the way. With time I
+            found a rhythm — one commit per requirement with a clear message.
+        </p>
+
+        <h3>Overall experience</h3>
+        <p>
+            I really enjoyed building this project with the opencode agent — it was my first
+            time ever working this way. Having the agent implement, explain and verify each
+            step made the whole process feel fast and clear.
+        </p>
+
+        <h3>Time spent</h3>
+        <p>
+            Developing this app with opencode took about <strong>6–8 hours</strong> in total.
+            I worked across <strong>3 days</strong>, roughly <strong>2–3 hours per day</strong>,
+            implementing, testing and committing each requirement.
+        </p>
+
+        <h3>Takeaways</h3>
+        <ul>
+            <li>Small, single-purpose requirements are the fastest way to make steady progress.</li>
+            <li>Ask for the test steps up front — don't discover them after the feature is done.</li>
+            <li>Keep logic as simple as the requirement asks; simplify when a feature grows beyond its scope.</li>
+            <li>Pin tool versions and keep a single, consistent URL/port for the whole project.</li>
+        </ul>
+    </section>
+
+</main>
+
+<footer>
+    <div class="container">
+        MiniRank — built with opencode, requirement by requirement.
+    </div>
+</footer>
+
+</body>
+</html>
